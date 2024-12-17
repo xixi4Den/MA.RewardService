@@ -1,0 +1,6 @@
+@MA.RewardService_HostAddress = http://localhost:5209
+
+GET {{MA.RewardService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
