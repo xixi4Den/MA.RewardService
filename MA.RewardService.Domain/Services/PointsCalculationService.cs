@@ -1,10 +1,10 @@
 using MA.RewardService.Domain.Abstractions;
 
-namespace MA.RewardService.Application.Services;
+namespace MA.RewardService.Domain.Services;
 
 public class PointsCalculator: IPointsCalculator
 {
-    public int Calculate(int[] spinResult)
+    public int Calculate(byte[] spinResult)
     {
         if (spinResult.Length != 3)
             throw new InvalidOperationException("Expected spin result must contain 3 digits");

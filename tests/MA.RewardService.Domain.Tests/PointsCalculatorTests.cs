@@ -1,12 +1,12 @@
 using FluentAssertions;
-using MA.RewardService.Application.Services;
+using MA.RewardService.Domain.Services;
 
-namespace MA.RewardService.Application.Tests;
+namespace MA.RewardService.Domain.Tests;
 
 [TestClass]
 public class PointsCalculatorTests
 {
-    public PointsCalculator _subject;
+    private PointsCalculator _subject;
 
     [TestInitialize]
     public void Init()
@@ -16,7 +16,7 @@ public class PointsCalculatorTests
 
     [DataTestMethod]
     [DynamicData(nameof(WinningData))]
-    public void WinningCombination_ShouldReturnExpectedPoints(int[] spinResult, int expectedPoints)
+    public void WinningCombination_ShouldReturnExpectedPoints(byte[] spinResult, int expectedPoints)
     {
         var result = _subject.Calculate(spinResult);
 
@@ -25,7 +25,7 @@ public class PointsCalculatorTests
     
     [DataTestMethod]
     [DynamicData(nameof(NonWinningData))]
-    public void NonWinningCombination_ShouldReturnZero(int[] spinResult)
+    public void NonWinningCombination_ShouldReturnZero(byte[] spinResult)
     {
         var result = _subject.Calculate(spinResult);
 
@@ -44,7 +44,7 @@ public class PointsCalculatorTests
     {
         get
         {
-            for (int i = 1; i <= 9; i++)
+            for (byte i = 1; i <= 9; i++)
             {
                 yield return [new[] {i, i, i}, i*3];
             }
@@ -55,10 +55,10 @@ public class PointsCalculatorTests
     {
         get
         {
-            yield return [new[] {0, 0, 1}];
-            yield return [new[] {1, 2, 3}];
-            yield return [new[] {4, 5, 4}];
-            yield return [new[] {8, 9, 9}];
+            yield return [new byte[] {0, 0, 1}];
+            yield return [new byte[] {1, 2, 3}];
+            yield return [new byte[] {4, 5, 4}];
+            yield return [new byte[] {8, 9, 9}];
         }
     }
 }

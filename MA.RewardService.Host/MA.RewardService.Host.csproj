@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MA.RewardService.Application\MA.RewardService.Application.csproj" />
+      <ProjectReference Include="..\MA.RewardService.Infrastructure.DataAccess\MA.RewardService.Infrastructure.DataAccess.csproj" />
     </ItemGroup>
 
 </Project>

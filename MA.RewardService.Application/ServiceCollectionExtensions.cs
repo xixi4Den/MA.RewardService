@@ -10,8 +10,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddMediatR(x => x.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-
-        services.AddSingleton<IPointsCalculator, PointsCalculator>();
+        
         services.AddSingleton<IMissionsConfigurationProvider, TestMissionsConfigurationProvider>();
         
         return services;
