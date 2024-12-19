@@ -19,9 +19,9 @@ public class MissionProgress
     {
         return new MissionProgress
         {
-            MissionIndex = missionIndex,
-           TotalPoints = totalPoints,
-           RemainingPoints = remainingPoints
+            MissionIndex = missionIndex, 
+            TotalPoints = totalPoints, 
+            RemainingPoints = remainingPoints
         };
     }
     

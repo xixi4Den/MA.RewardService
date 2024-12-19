@@ -1,6 +1,5 @@
 using MA.RewardService.Domain.Abstractions;
 using MA.RewardService.Domain.Entities;
-using MA.RewardService.Domain.Events;
 
 namespace MA.RewardService.Domain.Services;
 
@@ -20,30 +19,29 @@ public class MissionProgressProcessor : IMissionProgressProcessor
         var updatedTotalPoints = currentProgress.TotalPoints + newPoints;
         var updatedRemainingPoints = currentProgress.RemainingPoints + newPoints;
 
-        var targetMission = missionsConfig.Missions[currentProgress.MissionIndex - 1];
-        
-        if (updatedRemainingPoints >= targetMission.PointsGoal)
-        {
-            var nextMissionIndex = GetNextMissionIndex(currentProgress, missionsConfig);
+        var targetMissionIndex = currentProgress.MissionIndex;
+        var targetMission = missionsConfig.Missions[targetMissionIndex - 1];
 
-            return new MissionProgressProcessingResult
-            {
-                NewProgress = MissionProgress.Create(nextMissionIndex, updatedTotalPoints,
-                    updatedRemainingPoints - targetMission.PointsGoal),
-                Events = [new MissionReachedEvent(targetMission.Rewards)]
-            };
+        var achievedMissions = new List<Mission>();
+        while (updatedRemainingPoints >= targetMission.PointsGoal)
+        {
+            achievedMissions.Add(targetMission);
+            updatedRemainingPoints -= targetMission.PointsGoal;
+            targetMissionIndex = GetNextMissionIndex(targetMissionIndex, missionsConfig);
+            targetMission = missionsConfig.Missions[targetMissionIndex - 1];
         }
 
         return new MissionProgressProcessingResult
         {
-            NewProgress = MissionProgress.Create(currentProgress.MissionIndex, updatedTotalPoints, updatedRemainingPoints)
+            NewProgress = MissionProgress.Create(targetMissionIndex, updatedTotalPoints, updatedRemainingPoints),
+            AchievedMissions = achievedMissions
         };
     }
     
-    private static int GetNextMissionIndex(MissionProgress currentProgress, MissionsConfiguration missionsConfig)
+    private static int GetNextMissionIndex(int currentMissionIndex, MissionsConfiguration missionsConfig)
     {
-        return currentProgress.MissionIndex < missionsConfig.Missions.Count
-            ? currentProgress.MissionIndex + 1
+        return currentMissionIndex < missionsConfig.Missions.Count
+            ? currentMissionIndex + 1
             : missionsConfig.RepeatedIndex;
     }
 }

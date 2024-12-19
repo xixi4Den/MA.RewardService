@@ -1,6 +1,5 @@
 using FluentAssertions;
 using MA.RewardService.Domain.Entities;
-using MA.RewardService.Domain.Events;
 using MA.RewardService.Domain.Services;
 
 namespace MA.RewardService.Domain.Tests;
@@ -10,58 +9,57 @@ public class MissionProgressProcessorTests
 {
     private MissionProgressProcessor _subject;
     private MissionsConfiguration _config;
+    private Mission _mission1, _mission2, _mission3;
 
     [TestInitialize]
     public void Init()
     {
         _subject = new MissionProgressProcessor();
 
+        _mission1 = new Mission
+        {
+            PointsGoal = 10,
+            Rewards =
+            [
+                new Reward
+                {
+                    Name = RewardName.Spins,
+                    Value = 10,
+                }
+            ]
+        };
+        _mission2 = new Mission
+        {
+            PointsGoal = 20,
+            Rewards =
+            [
+                new Reward
+                {
+                    Name = RewardName.Coins,
+                    Value = 10,
+                }
+            ]
+        };
+        _mission3 = new Mission
+        {
+            PointsGoal = 100,
+            Rewards =
+            [
+                new Reward
+                {
+                    Name = RewardName.Coins,
+                    Value = 100,
+                },
+                new Reward
+                {
+                    Name = RewardName.Spins,
+                    Value = 100,
+                }
+            ]
+        };
         _config = new MissionsConfiguration
         {
-            Missions =
-            [
-                new Mission
-                {
-                    PointsGoal = 10,
-                    Rewards =
-                    [
-                        new Reward
-                        {
-                            Name = RewardName.Spins,
-                            Value = 10,
-                        }
-                    ]
-                },
-                new Mission
-                {
-                    PointsGoal = 20,
-                    Rewards =
-                    [
-                        new Reward
-                        {
-                            Name = RewardName.Coins,
-                            Value = 10,
-                        }
-                    ]
-                },
-                new Mission
-                {
-                    PointsGoal = 100,
-                    Rewards =
-                    [
-                        new Reward
-                        {
-                            Name = RewardName.Coins,
-                            Value = 100,
-                        },
-                        new Reward
-                        {
-                            Name = RewardName.Spins,
-                            Value = 100,
-                        }
-                    ]
-                }
-            ],
+            Missions = [_mission1, _mission2, _mission3],
             RepeatedIndex = 1,
         };
     }
@@ -77,7 +75,7 @@ public class MissionProgressProcessorTests
     }
     
     [TestMethod]
-    public void TargetMissionNotReached_ShouldIncrementPoints()
+    public void MissionNotReached_ShouldIncrementPoints()
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
@@ -88,7 +86,7 @@ public class MissionProgressProcessorTests
     }
     
     [TestMethod]
-    public void TargetMissionNotReached_ShouldNotChangeMissionIndex()
+    public void MissionNotReached_ShouldNotChangeMissionIndex()
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
@@ -98,17 +96,17 @@ public class MissionProgressProcessorTests
     }
     
     [TestMethod]
-    public void TargetMissionNotReached_ShouldReturnNoEvents()
+    public void MissionNotReached_ShouldReturnNoAchievedMissions()
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
         var result = _subject.Process(currentProgress, 15, _config);
 
-        result.Events.Should().BeEmpty();
+        result.AchievedMissions.Should().BeEmpty();
     }
     
     [TestMethod]
-    public void TargetMissionReached_ShouldIncrementTotalPoints()
+    public void MissionReached_ShouldIncrementTotalPoints()
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
@@ -118,7 +116,7 @@ public class MissionProgressProcessorTests
     }
     
     [TestMethod]
-    public void TargetMissionReached_AllRemainingPointsUsed_ShouldSetRemainingPointsToZero()
+    public void MissionReached_AllRemainingPointsUsed_ShouldSetRemainingPointsToZero()
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
@@ -128,7 +126,7 @@ public class MissionProgressProcessorTests
     }
     
     [TestMethod]
-    public void TargetMissionReached_UnusedRemainingPointsLeft_ShouldProperlyUpdateRemainingPoints()
+    public void MissionReached_UnusedRemainingPointsLeft_ShouldProperlyUpdateRemainingPoints()
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
@@ -138,7 +136,7 @@ public class MissionProgressProcessorTests
     }
     
     [TestMethod]
-    public void TargetMissionReached_TargetMissionIsNotLast_ShouldIncrementMissionIndex()
+    public void MissionReached_MissionIsNotLast_ShouldIncrementMissionIndex()
     {
         var currentProgress = MissionProgress.Create(2, 19, 9);
         
@@ -151,7 +149,7 @@ public class MissionProgressProcessorTests
     [DataRow(1)]
     [DataRow(2)]
     [DataRow(3)]
-    public void TargetMissionReached_TargetMissionIsLast_ShouldResetToConfiguredIndex(int resetIndex)
+    public void MissionReached_MissionIsLast_ShouldResetToConfiguredIndex(int resetIndex)
     {
         _config.RepeatedIndex = resetIndex;
         var currentProgress = MissionProgress.Create(3, 50, 20);
@@ -162,25 +160,32 @@ public class MissionProgressProcessorTests
     }
 
     [TestMethod]
-    public void TargetMissionReached_ShouldReturnMissionReachedEvent()
+    public void MissionReached_ShouldReturnAchievedMission()
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
 
         var result = _subject.Process(currentProgress, 87, _config);
 
-        result.Events.Should().BeEquivalentTo([
-            new MissionReachedEvent([
-                new Reward
-                {
-                    Name = RewardName.Coins,
-                    Value = 100,
-                },
-                new Reward
-                {
-                    Name = RewardName.Spins,
-                    Value = 100,
-                }
-            ])
-        ]);
+        result.AchievedMissions.Should().BeEquivalentTo([_mission3]);
+    }
+    
+    [TestMethod]
+    public void MultipleMissionsReached_ShouldReturnAllAchievedMissions()
+    {
+        var currentProgress = MissionProgress.Create(1, 0, 0);
+
+        var result = _subject.Process(currentProgress, 31, _config);
+
+        result.AchievedMissions.Should().BeEquivalentTo([_mission1, _mission2]);
+    }
+    
+    [TestMethod]
+    public void MultipleMissionsReached_ShouldReturnProperProgress()
+    {
+        var currentProgress = MissionProgress.Create(1, 0, 0);
+
+        var result = _subject.Process(currentProgress, 31, _config);
+
+        result.NewProgress.Should().BeEquivalentTo(MissionProgress.Create(3, 31, 1));
     }
 }
