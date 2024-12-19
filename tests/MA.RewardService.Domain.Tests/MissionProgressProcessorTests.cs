@@ -57,11 +57,7 @@ public class MissionProgressProcessorTests
                 }
             ]
         };
-        _config = new MissionsConfiguration
-        {
-            Missions = [_mission1, _mission2, _mission3],
-            RepeatedIndex = 1,
-        };
+        _config = new MissionsConfiguration([_mission1, _mission2, _mission3], 1);
     }
 
     [TestMethod]
@@ -151,7 +147,7 @@ public class MissionProgressProcessorTests
     [DataRow(3)]
     public void MissionReached_MissionIsLast_ShouldResetToConfiguredIndex(int resetIndex)
     {
-        _config.RepeatedIndex = resetIndex;
+        _config = new MissionsConfiguration([_mission1, _mission2, _mission3], resetIndex);
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
         var result = _subject.Process(currentProgress, 87, _config);

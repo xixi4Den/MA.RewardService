@@ -2,7 +2,16 @@ namespace MA.RewardService.Domain.Entities;
 
 public class MissionsConfiguration
 {
-    public required IList<Mission> Missions { get; set; }
+    public MissionsConfiguration(IList<Mission> missions, int repeatedIndex)
+    {
+        if (repeatedIndex <= 0 || repeatedIndex > missions.Count)
+            throw new ArgumentException("Invalid repeated index", nameof(repeatedIndex));
+        
+        Missions = missions;
+        RepeatedIndex = repeatedIndex;
+    }
     
-    public required int RepeatedIndex { get; set; }
+    public IList<Mission> Missions { get; }
+    
+    public int RepeatedIndex { get; }
 }

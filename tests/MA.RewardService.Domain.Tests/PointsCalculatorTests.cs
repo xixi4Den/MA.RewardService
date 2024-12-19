@@ -15,6 +15,15 @@ public class PointsCalculatorTests
     }
 
     [DataTestMethod]
+    [DynamicData(nameof(InvalidData))]
+    public void InvalidSpinResult_ShouldThrowException(byte[] spinResult)
+    {
+        var fn = () => _subject.Calculate(spinResult);
+
+        fn.Should().Throw<ArgumentException>();
+    }
+    
+    [DataTestMethod]
     [DynamicData(nameof(WinningData))]
     public void WinningCombination_ShouldReturnExpectedPoints(byte[] spinResult, int expectedPoints)
     {
@@ -40,7 +49,7 @@ public class PointsCalculatorTests
         result.Should().Be(0);
     }
     
-    public static IEnumerable<object[]> WinningData
+    private static IEnumerable<object[]> WinningData
     {
         get
         {
@@ -51,7 +60,7 @@ public class PointsCalculatorTests
         }
     }
     
-    public static IEnumerable<object[]> NonWinningData
+    private static IEnumerable<object[]> NonWinningData
     {
         get
         {
@@ -59,6 +68,16 @@ public class PointsCalculatorTests
             yield return [new byte[] {1, 2, 3}];
             yield return [new byte[] {4, 5, 4}];
             yield return [new byte[] {8, 9, 9}];
+        }
+    }
+    
+    private static IEnumerable<object[]> InvalidData
+    {
+        get
+        {
+            yield return [new byte[] {0, 0, 10}];
+            yield return [new byte[] {1, 2, 3, 4}];
+            yield return [new byte[] {4, 5}];
         }
     }
 }

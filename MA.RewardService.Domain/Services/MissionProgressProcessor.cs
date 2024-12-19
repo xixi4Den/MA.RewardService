@@ -10,6 +10,9 @@ public class MissionProgressProcessor : IMissionProgressProcessor
         int newPoints,
         MissionsConfiguration missionsConfig)
     {
+        if (newPoints < 0)
+            throw new ArgumentException("Points cannot be negative");
+        
         if (newPoints == 0)
             return new MissionProgressProcessingResult
             {
