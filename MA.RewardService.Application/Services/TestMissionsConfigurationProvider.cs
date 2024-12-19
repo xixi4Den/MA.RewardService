@@ -3,7 +3,7 @@ using MA.RewardService.Domain.Entities;
 
 namespace MA.RewardService.Application.Services;
 
-public class TestMissionsConfigurationProvider : IMissionsConfigurationProvider
+public class MissionsConfigurationHardcodedProvider : IMissionsConfigurationProvider
 {
     public Task<MissionsConfiguration> GetAsync()
     {

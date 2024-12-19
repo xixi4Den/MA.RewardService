@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDomainServices()
-    .AddApplicationServices()
+    .AddApplicationServices(builder.Configuration)
     .AddRedisDataAccessServices(builder.Configuration);
 
 var app = builder.Build();
