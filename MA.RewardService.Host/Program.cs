@@ -2,6 +2,7 @@ using MA.RewardService.Application;
 using MA.RewardService.Application.Feature.HandleMissionProgress;
 using MA.RewardService.Domain;
 using MA.RewardService.Infrastructure.DataAccess;
+using MA.RewardService.Infrastructure.Messaging;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDomainServices()
     .AddApplicationServices(builder.Configuration)
-    .AddRedisDataAccessServices(builder.Configuration);
+    .AddRedisDataAccessServices(builder.Configuration)
+    .AddMessagingServices(builder.Configuration);
 
 var app = builder.Build();
 

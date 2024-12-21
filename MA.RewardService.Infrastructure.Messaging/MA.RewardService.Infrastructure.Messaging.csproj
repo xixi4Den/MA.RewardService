@@ -7,15 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR" Version="12.4.1" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+      <PackageReference Include="DenisH.MA.SlotService.Contracts" Version="1.0.0-alpha.1" />
+      <PackageReference Include="MassTransit" Version="8.3.4" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.4" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\MA.RewardService.Application.Abstractions\MA.RewardService.Application.Abstractions.csproj" />
-      <ProjectReference Include="..\MA.RewardService.Contracts\MA.RewardService.Contracts.csproj" />
-      <ProjectReference Include="..\MA.RewardService.Domain\MA.RewardService.Domain.csproj" />
+      <ProjectReference Include="..\MA.RewardService.Application\MA.RewardService.Application.csproj" />
     </ItemGroup>
+
 </Project>

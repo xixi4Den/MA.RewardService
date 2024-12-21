@@ -15,7 +15,7 @@ public class MissionsConfigurationHardcodedProvider : IMissionsConfigurationProv
                 [
                     new Reward
                     {
-                        Name = RewardName.Spins,
+                        Name = RewardType.Spins,
                         Value = 10,
                     }
                 ]
@@ -27,7 +27,7 @@ public class MissionsConfigurationHardcodedProvider : IMissionsConfigurationProv
                 [
                     new Reward
                     {
-                        Name = RewardName.Coins,
+                        Name = RewardType.Coins,
                         Value = 10,
                     }
                 ]
@@ -39,12 +39,12 @@ public class MissionsConfigurationHardcodedProvider : IMissionsConfigurationProv
                 [
                     new Reward
                     {
-                        Name = RewardName.Coins,
+                        Name = RewardType.Coins,
                         Value = 100,
                     },
                     new Reward
                     {
-                        Name = RewardName.Spins,
+                        Name = RewardType.Spins,
                         Value = 100,
                     }
                 ]

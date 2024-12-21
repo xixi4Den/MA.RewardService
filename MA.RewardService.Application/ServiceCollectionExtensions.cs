@@ -1,4 +1,5 @@
 using System.Reflection;
+using MA.RewardService.Application.Abstractions;
 using MA.RewardService.Application.Configuration;
 using MA.RewardService.Application.Services;
 using MA.RewardService.Domain.Abstractions;
@@ -16,6 +17,7 @@ public static class ServiceCollectionExtensions
         services.AddMissionsConfiguration(configuration);
 
         services.AddSingleton<IMissionsConfigurationProvider, MissionsConfigurationFileSystemProvider>();
+        services.AddScoped<IRewardsGrantor, RewardsGrantor>();
         
         return services;
     }

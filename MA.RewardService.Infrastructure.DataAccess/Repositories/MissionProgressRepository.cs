@@ -1,13 +1,12 @@
 using MA.RewardService.Domain.Abstractions;
 using MA.RewardService.Domain.Entities;
+using MA.RewardService.Infrastructure.DataAccess.Exceptions;
 using StackExchange.Redis;
 
 namespace MA.RewardService.Infrastructure.DataAccess.Repositories;
 
 public class MissionProgressRepository(IConnectionMultiplexer redis): IMissionProgressRepository
 {
-    private readonly Func<int, string> _getKey = userId => $"user:{userId}:progress";
-
     private static class Fields
     {
         internal const string MissionIndex = "mission_index";
@@ -17,7 +16,7 @@ public class MissionProgressRepository(IConnectionMultiplexer redis): IMissionPr
 
     public async Task<MissionProgress> GetAsync(int userId)
     {
-        var key = _getKey(userId);
+        var key = GetKey(userId);
         var db = redis.GetDatabase();
         
         var fields = new RedisValue[] { Fields.MissionIndex, Fields.TotalPoints, Fields.RemainingPoints };
@@ -30,9 +29,9 @@ public class MissionProgressRepository(IConnectionMultiplexer redis): IMissionPr
         return MissionProgress.Create((int) values[0], (int) values[1], (int) values[2]);
     }
     
-    public async Task<bool> UpdateAsync(int userId, MissionProgress currentProgress, MissionProgress updatedProgress)
+    public async Task UpdateAsync(int userId, MissionProgress currentProgress, MissionProgress newProgress)
     {
-        var key = _getKey(userId);
+        var key = GetKey(userId);
         var db = redis.GetDatabase();
 
         var transaction = db.CreateTransaction();
@@ -40,13 +39,17 @@ public class MissionProgressRepository(IConnectionMultiplexer redis): IMissionPr
 
         var updates = new[]
         {
-            new HashEntry(Fields.MissionIndex, updatedProgress.MissionIndex),
-            new HashEntry(Fields.TotalPoints, updatedProgress.TotalPoints),
-            new HashEntry(Fields.RemainingPoints, updatedProgress.RemainingPoints)
+            new HashEntry(Fields.MissionIndex, newProgress.MissionIndex),
+            new HashEntry(Fields.TotalPoints, newProgress.TotalPoints),
+            new HashEntry(Fields.RemainingPoints, newProgress.RemainingPoints)
         };
 
         _ = transaction.HashSetAsync(key, updates);
 
-        return await transaction.ExecuteAsync();
+        var result = await transaction.ExecuteAsync();
+        if (!result)
+            throw new ConcurrentUpdateException();
     }
+    
+    private string GetKey(int userId) => $"user:{userId}:progress";
 }

@@ -11,13 +11,19 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddRedisDataAccessServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var redisConfiguration = AddRedisConfiguration(services, configuration);
-
-        services.AddSingleton<IConnectionMultiplexer>(sp =>
-            ConnectionMultiplexer.Connect(redisConfiguration.ConnectionString));
+        services.AddRedis(configuration);
 
         services.AddScoped<IMissionProgressRepository, MissionProgressRepository>();
         
+        return services;
+    }
+
+    private static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration)
+    {
+        var redisConfiguration = AddRedisConfiguration(services, configuration);
+        services.AddSingleton<IConnectionMultiplexer>(sp =>
+            ConnectionMultiplexer.Connect(redisConfiguration.ConnectionString));
+
         return services;
     }
 

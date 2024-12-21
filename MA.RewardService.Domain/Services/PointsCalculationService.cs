@@ -4,7 +4,7 @@ namespace MA.RewardService.Domain.Services;
 
 public class PointsCalculator: IPointsCalculator
 {
-    public int Calculate(byte[] spinResult)
+    public int Calculate(int[] spinResult)
     {
         if (spinResult.Length != 3)
             throw new ArgumentException("Expected spin result must contain 3 digits");

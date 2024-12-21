@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>1.0.0-alpha.1</Version>
+        <PackageId>DenisH.MA.RewardService.Contracts</PackageId>
+        <Authors>Denis Hihich</Authors>
+    </PropertyGroup>
+
+</Project>

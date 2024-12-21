@@ -16,7 +16,7 @@ public class PointsCalculatorTests
 
     [DataTestMethod]
     [DynamicData(nameof(InvalidData))]
-    public void InvalidSpinResult_ShouldThrowException(byte[] spinResult)
+    public void InvalidSpinResult_ShouldThrowException(int[] spinResult)
     {
         var fn = () => _subject.Calculate(spinResult);
 
@@ -25,7 +25,7 @@ public class PointsCalculatorTests
     
     [DataTestMethod]
     [DynamicData(nameof(WinningData))]
-    public void WinningCombination_ShouldReturnExpectedPoints(byte[] spinResult, int expectedPoints)
+    public void WinningCombination_ShouldReturnExpectedPoints(int[] spinResult, int expectedPoints)
     {
         var result = _subject.Calculate(spinResult);
 
@@ -34,7 +34,7 @@ public class PointsCalculatorTests
     
     [DataTestMethod]
     [DynamicData(nameof(NonWinningData))]
-    public void NonWinningCombination_ShouldReturnZero(byte[] spinResult)
+    public void NonWinningCombination_ShouldReturnZero(int[] spinResult)
     {
         var result = _subject.Calculate(spinResult);
 
@@ -53,7 +53,7 @@ public class PointsCalculatorTests
     {
         get
         {
-            for (byte i = 1; i <= 9; i++)
+            for (var i = 1; i <= 9; i++)
             {
                 yield return [new[] {i, i, i}, i*3];
             }
@@ -64,10 +64,10 @@ public class PointsCalculatorTests
     {
         get
         {
-            yield return [new byte[] {0, 0, 1}];
-            yield return [new byte[] {1, 2, 3}];
-            yield return [new byte[] {4, 5, 4}];
-            yield return [new byte[] {8, 9, 9}];
+            yield return [new[] {0, 0, 1}];
+            yield return [new[] {1, 2, 3}];
+            yield return [new[] {4, 5, 4}];
+            yield return [new[] {8, 9, 9}];
         }
     }
     
@@ -75,9 +75,9 @@ public class PointsCalculatorTests
     {
         get
         {
-            yield return [new byte[] {0, 0, 10}];
-            yield return [new byte[] {1, 2, 3, 4}];
-            yield return [new byte[] {4, 5}];
+            yield return [new[] {0, 0, 10}];
+            yield return [new[] {1, 2, 3, 4}];
+            yield return [new[] {4, 5}];
         }
     }
 }

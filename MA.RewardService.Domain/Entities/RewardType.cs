@@ -1,6 +1,6 @@
 namespace MA.RewardService.Domain.Entities;
 
-public enum RewardName
+public enum RewardType
 {
     Spins = 1,
     Coins = 2,
