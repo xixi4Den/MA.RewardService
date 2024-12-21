@@ -1,6 +1,7 @@
 using FluentAssertions;
 using MA.RewardService.Domain.Entities;
 using MA.RewardService.Domain.Services;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace MA.RewardService.Domain.Tests;
 
@@ -11,10 +12,12 @@ public class MissionProgressProcessorTests
     private MissionsConfiguration _config;
     private Mission _mission1, _mission2, _mission3;
 
+    private const int UserId = 111;
+
     [TestInitialize]
     public void Init()
     {
-        _subject = new MissionProgressProcessor();
+        _subject = new MissionProgressProcessor(NullLogger<MissionProgressProcessor>.Instance);
 
         _mission1 = new Mission
         {
@@ -65,7 +68,7 @@ public class MissionProgressProcessorTests
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
-        var result = _subject.Process(currentProgress, 0, _config);
+        var result = _subject.Process(UserId, currentProgress, 0, _config);
 
         result.NewProgress.Should().BeEquivalentTo(currentProgress);
     }
@@ -75,7 +78,7 @@ public class MissionProgressProcessorTests
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
-        var result = _subject.Process(currentProgress, 15, _config);
+        var result = _subject.Process(UserId, currentProgress, 15, _config);
 
         result.NewProgress.TotalPoints.Should().Be(65);
         result.NewProgress.RemainingPoints.Should().Be(35);
@@ -86,7 +89,7 @@ public class MissionProgressProcessorTests
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
-        var result = _subject.Process(currentProgress, 15, _config);
+        var result = _subject.Process(UserId, currentProgress, 15, _config);
 
         result.NewProgress.MissionIndex.Should().Be(currentProgress.MissionIndex);
     }
@@ -96,7 +99,7 @@ public class MissionProgressProcessorTests
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
-        var result = _subject.Process(currentProgress, 15, _config);
+        var result = _subject.Process(UserId, currentProgress, 15, _config);
 
         result.AchievedMissions.Should().BeEmpty();
     }
@@ -106,7 +109,7 @@ public class MissionProgressProcessorTests
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
-        var result = _subject.Process(currentProgress, 80, _config);
+        var result = _subject.Process(UserId, currentProgress, 80, _config);
 
         result.NewProgress.TotalPoints.Should().Be(130);
     }
@@ -116,7 +119,7 @@ public class MissionProgressProcessorTests
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
-        var result = _subject.Process(currentProgress, 80, _config);
+        var result = _subject.Process(UserId, currentProgress, 80, _config);
 
         result.NewProgress.RemainingPoints.Should().Be(0);
     }
@@ -126,7 +129,7 @@ public class MissionProgressProcessorTests
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
-        var result = _subject.Process(currentProgress, 87, _config);
+        var result = _subject.Process(UserId, currentProgress, 87, _config);
 
         result.NewProgress.RemainingPoints.Should().Be(7);
     }
@@ -136,7 +139,7 @@ public class MissionProgressProcessorTests
     {
         var currentProgress = MissionProgress.Create(2, 19, 9);
         
-        var result = _subject.Process(currentProgress, 16, _config);
+        var result = _subject.Process(UserId, currentProgress, 16, _config);
 
         result.NewProgress.MissionIndex.Should().Be(3);
     }
@@ -150,7 +153,7 @@ public class MissionProgressProcessorTests
         _config = new MissionsConfiguration([_mission1, _mission2, _mission3], resetIndex);
         var currentProgress = MissionProgress.Create(3, 50, 20);
         
-        var result = _subject.Process(currentProgress, 87, _config);
+        var result = _subject.Process(UserId, currentProgress, 87, _config);
 
         result.NewProgress.MissionIndex.Should().Be(resetIndex);
     }
@@ -160,7 +163,7 @@ public class MissionProgressProcessorTests
     {
         var currentProgress = MissionProgress.Create(3, 50, 20);
 
-        var result = _subject.Process(currentProgress, 87, _config);
+        var result = _subject.Process(UserId, currentProgress, 87, _config);
 
         result.AchievedMissions.Should().BeEquivalentTo([_mission3]);
     }
@@ -170,7 +173,7 @@ public class MissionProgressProcessorTests
     {
         var currentProgress = MissionProgress.Create(1, 0, 0);
 
-        var result = _subject.Process(currentProgress, 31, _config);
+        var result = _subject.Process(UserId, currentProgress, 31, _config);
 
         result.AchievedMissions.Should().BeEquivalentTo([_mission1, _mission2]);
     }
@@ -180,7 +183,7 @@ public class MissionProgressProcessorTests
     {
         var currentProgress = MissionProgress.Create(1, 0, 0);
 
-        var result = _subject.Process(currentProgress, 31, _config);
+        var result = _subject.Process(UserId, currentProgress, 31, _config);
 
         result.NewProgress.Should().BeEquivalentTo(MissionProgress.Create(3, 31, 1));
     }

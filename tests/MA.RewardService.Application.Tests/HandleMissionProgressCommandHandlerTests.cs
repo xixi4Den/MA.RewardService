@@ -45,7 +45,7 @@ public class HandleMissionProgressCommandHandlerTests
 
         await _subject.Handle(_command, CancellationToken.None);
         
-        _missionProgressProcessorMock.Verify(x => x.Process(It.IsAny<MissionProgress>(), It.IsAny<int>(), It.IsAny<MissionsConfiguration>()), Times.Never);
+        _missionProgressProcessorMock.Verify(x => x.Process(It.IsAny<int>(), It.IsAny<MissionProgress>(), It.IsAny<int>(), It.IsAny<MissionsConfiguration>()), Times.Never);
     }
     
     [TestMethod]
@@ -102,7 +102,7 @@ public class HandleMissionProgressCommandHandlerTests
     private void SetupMissionProgressProcessing(MissionProgressProcessingResult result)
     {
         _missionProgressProcessorMock.Setup(x =>
-                x.Process(It.IsAny<MissionProgress>(), It.IsAny<int>(), It.IsAny<MissionsConfiguration>()))
+                x.Process(It.IsAny<int>(), It.IsAny<MissionProgress>(), It.IsAny<int>(), It.IsAny<MissionsConfiguration>()))
             .Returns(result);
     }
 }

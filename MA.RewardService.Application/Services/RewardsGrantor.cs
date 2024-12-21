@@ -5,18 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace MA.RewardService.Application.Services;
 
-public class RewardsGrantor: IRewardsGrantor
+public class RewardsGrantor(
+    IEventPublisher eventPublisher,
+    ILogger<RewardsGrantor> logger)
+    : IRewardsGrantor
 {
-    private readonly IEventPublisher _eventPublisher;
-    private readonly ILogger<RewardsGrantor> _logger;
-
-    public RewardsGrantor(IEventPublisher eventPublisher,
-        ILogger<RewardsGrantor> logger)
-    {
-        _eventPublisher = eventPublisher;
-        _logger = logger;
-    }
-    
     public async Task GrantAsync(int userId, IEnumerable<Mission> missions, CancellationToken ct)
     {
         var totalRewardAmountByType = GetTotalRewardAmountByType(missions);
@@ -44,14 +37,14 @@ public class RewardsGrantor: IRewardsGrantor
         {
             case RewardType.Spins:
                 var spinsRewardedEvent = new SpinPointsRewardGrantedEvent{UserId = userId, Amount = amount};
-                await _eventPublisher.PublishAsync(spinsRewardedEvent, ct);
+                await eventPublisher.PublishAsync(spinsRewardedEvent, ct);
                 break;
             case RewardType.Coins:
                 var coinsRewardedEvent = new CoinsRewardGrantedEvent{UserId = userId, Amount = amount};
-                await _eventPublisher.PublishAsync(coinsRewardedEvent, ct);
+                await eventPublisher.PublishAsync(coinsRewardedEvent, ct);
                 break;
             default:
-                _logger.LogWarning("An event for reward type {Type} was not published because of missing mapping", rewardType);
+                logger.LogWarning("An event for reward type {Type} was not published because of missing mapping", rewardType);
                 break;
         }
     }

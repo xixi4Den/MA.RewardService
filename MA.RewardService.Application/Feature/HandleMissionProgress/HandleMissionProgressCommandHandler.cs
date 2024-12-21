@@ -34,16 +34,16 @@ public class HandleMissionProgressCommandHandler: IRequestHandler<HandleMissionP
         var newPoints = _pointsCalculator.Calculate(request.SpinResult);
         if (newPoints == 0)
         {
-            _logger.LogDebug("No points scored. Skipping mission progress handling");
+            _logger.LogDebug("No points scored by user {UserId}. Skipping mission progress handling", request.UserId);
             
             return;
         }
         
-        _logger.LogDebug("{Score} points scored", newPoints);
+        _logger.LogDebug("{Score} points scored by {UserId}", newPoints, request.UserId);
         
         var currentProgress = await _missionProgressRepository.GetAsync(request.UserId);
         var missionsConfig = await _missionsConfigurationProvider.GetAsync();
-        var processingResult = _missionProgressProcessor.Process(currentProgress, newPoints, missionsConfig);
+        var processingResult = _missionProgressProcessor.Process(request.UserId, currentProgress, newPoints, missionsConfig);
         
         await _missionProgressRepository.UpdateAsync(request.UserId, currentProgress, processingResult.NewProgress);
         

@@ -1,12 +1,12 @@
 using MA.RewardService.Domain.Abstractions;
 using MA.RewardService.Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace MA.RewardService.Domain.Services;
 
-public class MissionProgressProcessor : IMissionProgressProcessor
+public class MissionProgressProcessor(ILogger<MissionProgressProcessor> logger) : IMissionProgressProcessor
 {
-    public MissionProgressProcessingResult Process(
-        MissionProgress currentProgress,
+    public MissionProgressProcessingResult Process(int userId, MissionProgress currentProgress,
         int newPoints,
         MissionsConfiguration missionsConfig)
     {
@@ -28,6 +28,7 @@ public class MissionProgressProcessor : IMissionProgressProcessor
         var achievedMissions = new List<Mission>();
         while (updatedRemainingPoints >= targetMission.PointsGoal)
         {
+            logger.LogDebug("Mission {MissionIndex} completed by user {UserId}", targetMissionIndex, userId);
             achievedMissions.Add(targetMission);
             updatedRemainingPoints -= targetMission.PointsGoal;
             targetMissionIndex = GetNextMissionIndex(targetMissionIndex, missionsConfig);

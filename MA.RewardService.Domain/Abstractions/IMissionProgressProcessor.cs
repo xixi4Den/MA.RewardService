@@ -4,8 +4,7 @@ namespace MA.RewardService.Domain.Abstractions;
 
 public interface IMissionProgressProcessor
 {
-    MissionProgressProcessingResult Process(
-        MissionProgress currentProgress,
+    MissionProgressProcessingResult Process(int userId, MissionProgress currentProgress,
         int newPoints,
         MissionsConfiguration missionsConfig);
 }

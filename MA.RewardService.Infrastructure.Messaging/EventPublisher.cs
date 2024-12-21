@@ -1,19 +1,16 @@
+using System.Text.Json;
 using MA.RewardService.Application.Abstractions;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 
 namespace MA.RewardService.Infrastructure.Messaging;
 
-public class EventPublisher: IEventPublisher
+public class EventPublisher(IBus bus, ILogger<EventPublisher> logger) : IEventPublisher
 {
-    private readonly IBus _bus;
-
-    public EventPublisher(IBus bus)
-    {
-        _bus = bus;
-    }
-    
     public async Task PublishAsync<TEvent>(TEvent e, CancellationToken ct)
     {
-        await _bus.Publish(e, ct);
+        logger.LogDebug("Publish {Type} event: {Message}", typeof(TEvent), JsonSerializer.Serialize(e));
+        
+        await bus.Publish(e, ct);
     }
 }
