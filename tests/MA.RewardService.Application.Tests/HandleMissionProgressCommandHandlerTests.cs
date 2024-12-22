@@ -11,7 +11,7 @@ namespace MA.RewardService.Application.Tests;
 public class HandleMissionProgressCommandHandlerTests
 {
     private HandleMissionProgressCommandHandler _subject;
-    private HandleMissionProgressCommand _command = new(666, [7,7,7]);
+    private HandleMissionProgressCommand _command = new(666, Guid.NewGuid(), [7,7,7]);
     
     private Mock<IPointsCalculator> _pointsCalculatorMock;
     private Mock<IMissionProgressProcessor> _missionProgressProcessorMock;
@@ -36,6 +36,16 @@ public class HandleMissionProgressCommandHandlerTests
 
         SetupScoredPoints(10);
         SetupMissionProgressRead(MissionProgress.Empty());
+    }
+
+    [TestMethod]
+    public async Task SpinAlreadyProcessed_ShouldNotHandleMissionProgress()
+    {
+        SetupSpinDuplicate(true);
+
+        await _subject.Handle(_command, CancellationToken.None);
+        
+        _missionProgressProcessorMock.Verify(x => x.Process(It.IsAny<int>(), It.IsAny<MissionProgress>(), It.IsAny<int>(), It.IsAny<MissionsConfiguration>()), Times.Never);
     }
 
     [TestMethod]
@@ -85,6 +95,12 @@ public class HandleMissionProgressCommandHandlerTests
         await _subject.Handle(_command, CancellationToken.None);
         
         _rewardsGrantorMock.Verify(x => x.GrantAsync(It.IsAny<int>(), It.IsAny<IEnumerable<Mission>>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+    
+    private void SetupSpinDuplicate(bool result)
+    {
+        _missionProgressRepositoryMock.Setup(x => x.HasSpinIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(result);
     }
 
     private void SetupScoredPoints(int points)

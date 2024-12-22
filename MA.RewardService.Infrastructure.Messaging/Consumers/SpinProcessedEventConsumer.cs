@@ -18,7 +18,7 @@ public class SpinProcessedEventConsumer(
         var message = context.Message;
         logger.LogDebug("Received message {MessageId} of type {EventType}: {Message}", context.MessageId, nameof(SpinProcessedEvent), JsonSerializer.Serialize(message));
         
-        var command = new HandleMissionProgressCommand(message.UserId, message.Result);
+        var command = new HandleMissionProgressCommand(message.UserId, message.SpinId, message.Result);
         await mediator.Send(command);
         
         logger.LogDebug("Message {MessageId} has been processed", context.MessageId);

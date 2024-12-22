@@ -31,6 +31,13 @@ public class HandleMissionProgressCommandHandler: IRequestHandler<HandleMissionP
     
     public async Task Handle(HandleMissionProgressCommand request, CancellationToken ct)
     {
+        if (await _missionProgressRepository.HasSpinIdAsync(request.SpindId))
+        {
+            _logger.LogWarning("Spin {SpinId} already processed. Skip processing", request.SpindId);
+            
+            return;
+        }
+        
         var newPoints = _pointsCalculator.Calculate(request.SpinResult);
         if (newPoints == 0)
         {
@@ -45,7 +52,7 @@ public class HandleMissionProgressCommandHandler: IRequestHandler<HandleMissionP
         var missionsConfig = await _missionsConfigurationProvider.GetAsync();
         var processingResult = _missionProgressProcessor.Process(request.UserId, currentProgress, newPoints, missionsConfig);
         
-        await _missionProgressRepository.UpdateAsync(request.UserId, currentProgress, processingResult.NewProgress);
+        await _missionProgressRepository.UpdateAsync(request.UserId, request.SpindId, currentProgress, processingResult.NewProgress);
         
         _logger.LogDebug($"Mission progress updated successfully for user {request.UserId}");
         if (processingResult.AchievedMissions.Any())
