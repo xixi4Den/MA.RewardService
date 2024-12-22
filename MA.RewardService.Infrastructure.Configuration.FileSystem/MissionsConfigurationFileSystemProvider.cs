@@ -1,11 +1,11 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using MA.RewardService.Application.Configuration;
 using MA.RewardService.Domain.Abstractions;
 using MA.RewardService.Domain.Entities;
+using MA.RewardService.Infrastructure.Configuration.FileSystem.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace MA.RewardService.Application.Services;
+namespace MA.RewardService.Infrastructure.Configuration.FileSystem;
 
 public class MissionsConfigurationFileSystemProvider: IMissionsConfigurationProvider
 {

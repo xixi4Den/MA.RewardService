@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MA.RewardService.Contracts"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MA.RewardService.Application.Abstractions", "MA.RewardService.Application.Abstractions\MA.RewardService.Application.Abstractions.csproj", "{5FCEE54A-20A3-48F0-9B4C-4DCB6E62C1B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MA.RewardService.Infrastructure.Configuration.FileSystem", "MA.RewardService.Infrastructure.Configuration.FileSystem\MA.RewardService.Infrastructure.Configuration.FileSystem.csproj", "{60970E6B-D634-4134-B170-F96FB60073F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{5FCEE54A-20A3-48F0-9B4C-4DCB6E62C1B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FCEE54A-20A3-48F0-9B4C-4DCB6E62C1B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FCEE54A-20A3-48F0-9B4C-4DCB6E62C1B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60970E6B-D634-4134-B170-F96FB60073F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60970E6B-D634-4134-B170-F96FB60073F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60970E6B-D634-4134-B170-F96FB60073F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60970E6B-D634-4134-B170-F96FB60073F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{81223588-A275-46DE-B75F-2CAF18D65FC1} = {324ED7B9-DFC1-4948-A32F-819CD2FF6DC2}

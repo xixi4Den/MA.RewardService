@@ -1,4 +1,4 @@
-namespace MA.RewardService.Application.Configuration;
+namespace MA.RewardService.Infrastructure.Configuration.FileSystem.Configuration;
 
 public class MissionsConfig
 {

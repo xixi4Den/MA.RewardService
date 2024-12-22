@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MA.RewardService.Application\MA.RewardService.Application.csproj" />
+      <ProjectReference Include="..\MA.RewardService.Infrastructure.Configuration.FileSystem\MA.RewardService.Infrastructure.Configuration.FileSystem.csproj" />
       <ProjectReference Include="..\MA.RewardService.Infrastructure.DataAccess\MA.RewardService.Infrastructure.DataAccess.csproj" />
       <ProjectReference Include="..\MA.RewardService.Infrastructure.Messaging\MA.RewardService.Infrastructure.Messaging.csproj" />
     </ItemGroup>

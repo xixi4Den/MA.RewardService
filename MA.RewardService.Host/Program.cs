@@ -2,6 +2,8 @@ using HealthChecks.UI.Client;
 using MA.RewardService.Application;
 using MA.RewardService.Application.Feature.HandleMissionProgress;
 using MA.RewardService.Domain;
+using MA.RewardService.Infrastructure.Configuration.FileSystem;
+using MA.RewardService.Infrastructure.Configuration.FileSystem.Extensions;
 using MA.RewardService.Infrastructure.DataAccess;
 using MA.RewardService.Infrastructure.DataAccess.Extensions;
 using MA.RewardService.Infrastructure.Messaging;
@@ -16,10 +18,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDomainServices()
     .AddApplicationServices(builder.Configuration)
     .AddRedisDataAccessServices(builder.Configuration)
-    .AddMessagingServices(builder.Configuration);
+    .AddMessagingServices(builder.Configuration)
+    .AddFileSystemConfiguration(builder.Configuration);
 
 builder.Services.AddHealthChecks()
-    .AddRedisHealthCheck(builder.Configuration);
+    .AddRedisHealthCheck(builder.Configuration)
+    .AddFileSystemConfigChecks(builder.Configuration);
 
 var app = builder.Build();
 
