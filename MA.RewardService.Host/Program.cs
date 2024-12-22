@@ -1,13 +1,12 @@
 using HealthChecks.UI.Client;
+using MA.RewardService.Api.Endpoints;
 using MA.RewardService.Application;
-using MA.RewardService.Application.Feature.HandleMissionProgress;
 using MA.RewardService.Domain;
 using MA.RewardService.Infrastructure.Configuration.FileSystem;
 using MA.RewardService.Infrastructure.Configuration.FileSystem.Extensions;
 using MA.RewardService.Infrastructure.DataAccess;
 using MA.RewardService.Infrastructure.DataAccess.Extensions;
 using MA.RewardService.Infrastructure.Messaging;
-using MediatR;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,13 +31,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
-// TODO: remove
-app.MapGet("/test", async (ISender sender) =>
-{
-    await sender.Send(new HandleMissionProgressCommand(22, [7, 7, 7]));
-    // var tasks = Enumerable.Range(0, 10).Select(_ => sender.Send(new HandleMissionProgressCommand(2, [7, 7, 7])));
-    // await Task.WhenAll(tasks);
-});
+app.MapProgressEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
