@@ -14,6 +14,7 @@ public static class ServiceCollectionExtensions
         services.AddRedis(configuration);
 
         services.AddScoped<IMissionProgressRepository, MissionProgressRepository>();
+        services.AddScoped<IGrantedRewardRepository, GrantedRewardRepository>();
         
         return services;
     }

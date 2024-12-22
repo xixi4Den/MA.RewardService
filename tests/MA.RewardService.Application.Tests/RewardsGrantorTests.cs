@@ -1,6 +1,7 @@
 using MA.RewardService.Application.Abstractions;
 using MA.RewardService.Application.Services;
 using MA.RewardService.Contracts;
+using MA.RewardService.Domain.Abstractions;
 using MA.RewardService.Domain.Entities;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -19,7 +20,8 @@ public class RewardsGrantorTests
     public void Init()
     {
         _eventPublisherMock = new Mock<IEventPublisher>();
-        _subject = new RewardsGrantor(_eventPublisherMock.Object, NullLogger<RewardsGrantor>.Instance);
+        var rewardRepoMock = new Mock<IGrantedRewardRepository>();
+        _subject = new RewardsGrantor(rewardRepoMock.Object, _eventPublisherMock.Object, NullLogger<RewardsGrantor>.Instance);
     }
     
     [TestMethod]
