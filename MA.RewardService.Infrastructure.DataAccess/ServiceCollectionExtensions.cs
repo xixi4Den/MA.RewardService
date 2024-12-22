@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IMissionProgressRepository, MissionProgressRepository>();
         services.AddScoped<IGrantedRewardRepository, GrantedRewardRepository>();
+        services.AddScoped<ISpinsLogRepository, SpinsLogRepository>();
         
         return services;
     }
