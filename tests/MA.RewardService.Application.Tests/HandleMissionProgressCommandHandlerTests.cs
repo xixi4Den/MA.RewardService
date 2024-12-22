@@ -18,6 +18,7 @@ public class HandleMissionProgressCommandHandlerTests
     private Mock<IMissionsConfigurationProvider> _missionConfigProviderMock;
     private Mock<IMissionProgressRepository> _missionProgressRepositoryMock;
     private Mock<IRewardsGrantor> _rewardsGrantorMock;
+    private Mock<ISpinsLogRepository> _spinsLogRepositoryMock;
 
     [TestInitialize]
     public void Init()
@@ -27,11 +28,13 @@ public class HandleMissionProgressCommandHandlerTests
         _missionConfigProviderMock = new Mock<IMissionsConfigurationProvider>();
         _missionProgressRepositoryMock = new Mock<IMissionProgressRepository>();
         _rewardsGrantorMock = new Mock<IRewardsGrantor>();
+        _spinsLogRepositoryMock = new Mock<ISpinsLogRepository>();
         _subject = new HandleMissionProgressCommandHandler(_pointsCalculatorMock.Object,
             _missionProgressProcessorMock.Object,
             _missionConfigProviderMock.Object,
             _missionProgressRepositoryMock.Object,
             _rewardsGrantorMock.Object,
+            _spinsLogRepositoryMock.Object,
             new NullLogger<HandleMissionProgressCommandHandler>());
 
         SetupScoredPoints(10);
@@ -41,7 +44,7 @@ public class HandleMissionProgressCommandHandlerTests
     [TestMethod]
     public async Task SpinAlreadyProcessed_ShouldNotHandleMissionProgress()
     {
-        SetupSpinDuplicate(true);
+        SetupSpinExistsInLog(true);
 
         await _subject.Handle(_command, CancellationToken.None);
         
@@ -97,9 +100,9 @@ public class HandleMissionProgressCommandHandlerTests
         _rewardsGrantorMock.Verify(x => x.GrantAsync(It.IsAny<int>(), It.IsAny<IEnumerable<Mission>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
     
-    private void SetupSpinDuplicate(bool result)
+    private void SetupSpinExistsInLog(bool result)
     {
-        _missionProgressRepositoryMock.Setup(x => x.HasSpinIdAsync(It.IsAny<Guid>()))
+        _spinsLogRepositoryMock.Setup(x => x.ContainsAsync(It.IsAny<Guid>()))
             .ReturnsAsync(result);
     }
 
