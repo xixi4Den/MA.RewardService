@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MA.RewardService.Infrastruc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MA.RewardService.Api", "MA.RewardService.Api\MA.RewardService.Api.csproj", "{001BCD41-CF2A-4F30-AAEC-E82B0147B115}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MA.RewardService.IntegrationTests", "tests\MA.RewardService.IntegrationTests\MA.RewardService.IntegrationTests.csproj", "{88026B7E-3AB6-4B36-842D-4F84DAC2598E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,9 +76,14 @@ Global
 		{001BCD41-CF2A-4F30-AAEC-E82B0147B115}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{001BCD41-CF2A-4F30-AAEC-E82B0147B115}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{001BCD41-CF2A-4F30-AAEC-E82B0147B115}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88026B7E-3AB6-4B36-842D-4F84DAC2598E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88026B7E-3AB6-4B36-842D-4F84DAC2598E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88026B7E-3AB6-4B36-842D-4F84DAC2598E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88026B7E-3AB6-4B36-842D-4F84DAC2598E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{81223588-A275-46DE-B75F-2CAF18D65FC1} = {324ED7B9-DFC1-4948-A32F-819CD2FF6DC2}
 		{4FDD20A7-E680-4B32-A856-F07E228823A5} = {324ED7B9-DFC1-4948-A32F-819CD2FF6DC2}
+		{88026B7E-3AB6-4B36-842D-4F84DAC2598E} = {324ED7B9-DFC1-4948-A32F-819CD2FF6DC2}
 	EndGlobalSection
 EndGlobal
