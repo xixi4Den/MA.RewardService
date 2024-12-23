@@ -7,7 +7,10 @@ using MA.RewardService.Infrastructure.Configuration.FileSystem.Extensions;
 using MA.RewardService.Infrastructure.DataAccess;
 using MA.RewardService.Infrastructure.DataAccess.Extensions;
 using MA.RewardService.Infrastructure.Messaging;
+using MassTransit.Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +26,26 @@ builder.Services.AddDomainServices()
 builder.Services.AddHealthChecks()
     .AddRedisHealthCheck(builder.Configuration)
     .AddFileSystemConfigChecks(builder.Configuration);
+
+var otlpEndpoint = builder.Configuration["EXPORTER_OTLP_ENDPOINT"];
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource.AddService(serviceName: "reward"))
+    .WithTracing(x =>
+    {
+        x.AddSource(DiagnosticHeaders.DefaultListenerName);
+        x.AddAspNetCoreInstrumentation();
+        if (otlpEndpoint != null)
+        {
+            x.AddZipkinExporter(options =>
+            {
+                options.Endpoint = new Uri(otlpEndpoint);
+            });
+        }
+        else
+        {
+            x.AddConsoleExporter();
+        }
+    });
 
 var app = builder.Build();
 

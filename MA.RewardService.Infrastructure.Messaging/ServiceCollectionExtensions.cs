@@ -28,11 +28,11 @@ public static class ServiceCollectionExtensions
                 cfg.ConfigureEndpoints(context);
             });
             
-            busConfigurator.AddConfigureEndpointsCallback((name, cfg) =>
-            {
-                if (cfg is IRabbitMqReceiveEndpointConfigurator rmq)
-                    rmq.SingleActiveConsumer = true;
-            });
+            // busConfigurator.AddConfigureEndpointsCallback((name, cfg) =>
+            // {
+            //     if (cfg is IRabbitMqReceiveEndpointConfigurator rmq)
+            //         rmq.SingleActiveConsumer = true;
+            // });
         });
         
         services.AddScoped<IEventPublisher, EventPublisher>();
