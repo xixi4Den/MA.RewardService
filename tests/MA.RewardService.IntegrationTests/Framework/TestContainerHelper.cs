@@ -12,6 +12,7 @@ public static class TestContainerHelper
     {
         RedisContainer = new RedisBuilder()
             .WithImage("redis:7.0")
+            .WithAutoRemove(true)
             .Build();
     }
 
