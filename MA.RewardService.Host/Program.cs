@@ -2,15 +2,14 @@ using HealthChecks.UI.Client;
 using MA.RewardService.Api.Endpoints;
 using MA.RewardService.Application;
 using MA.RewardService.Domain;
+using MA.RewardService.Host.Extensions;
 using MA.RewardService.Infrastructure.Configuration.FileSystem;
 using MA.RewardService.Infrastructure.Configuration.FileSystem.Extensions;
 using MA.RewardService.Infrastructure.DataAccess;
 using MA.RewardService.Infrastructure.DataAccess.Extensions;
 using MA.RewardService.Infrastructure.Messaging;
-using MassTransit.Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,22 +29,8 @@ builder.Services.AddHealthChecks()
 var otlpEndpoint = builder.Configuration["EXPORTER_OTLP_ENDPOINT"];
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(resource => resource.AddService(serviceName: "reward"))
-    .WithTracing(x =>
-    {
-        x.AddSource(DiagnosticHeaders.DefaultListenerName);
-        x.AddAspNetCoreInstrumentation();
-        if (otlpEndpoint != null)
-        {
-            x.AddZipkinExporter(options =>
-            {
-                options.Endpoint = new Uri(otlpEndpoint);
-            });
-        }
-        else
-        {
-            x.AddConsoleExporter();
-        }
-    });
+    .AddTraces(builder.Configuration)
+    .AddMetrics();;
 
 var app = builder.Build();
 
@@ -61,6 +46,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapPrometheusScrapingEndpoint();
 
 // app.UseHttpsRedirection();
 
